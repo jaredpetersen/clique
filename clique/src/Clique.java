@@ -29,13 +29,15 @@ public class Clique
 		//for(int i = 0; i< matrix.length; i++)
 		//	System.out.println("Degree of " + i + " = " + degree(i));
 		
-		for(int i = 0; i< matrix.length; i++)
-			if(numOfDegreeOrHigher(i+1) >= i+1)
-				System.out.println(numOfDegreeOrHigher(i+1) + 
-					" vertices have degree " + (i+1) + " or higher");
+		for(int i = matrix.length; i >= 1; i--)
+			if(numOfDegreeOrHigher(i-1) >= i-1)
+				if(checkClique(i))
+					break;// this means we found one
+				//System.out.println(numOfDegreeOrHigher(i+1) + 
+				//	" vertices have degree " + (i+1) + " or higher");
 	}
 	
-	public void InitDegree(){
+	private void InitDegree(){
 		degree = new int[matrix.length];
 		int deg = 0;
 		for(int i = 0; i< matrix.length; i++) {
@@ -46,7 +48,7 @@ public class Clique
 		}
 	}
 	
-	public int numOfDegreeOrHigher(int deg)
+	private int numOfDegreeOrHigher(int deg)
 	{
 		int num = 0;
 		for(int i = 0; i < matrix.length; i++)
@@ -55,7 +57,7 @@ public class Clique
 		return num;
 	}
 	
-	public void printMatrix()
+	private void printMatrix()
 	{
 		//print what's in Matrix
 		for (int i = 0; i< matrix.length; i++){
@@ -65,7 +67,48 @@ public class Clique
 		}
 	}
 	
-	public void InitMatrix(){
+	// input to this method is the number of nodes in the clique
+	private boolean checkClique(int size) {
+		System.out.println("checking for a clique of size " + size + "...\n");
+		int nodes[] = new int[numOfDegreeOrHigher(size-1)];
+		
+		int count = 0;
+		for(int i = 0; i< degree.length; i++)
+			if(degree[i] >= size-1){
+				nodes[count] = i;
+				count++;
+			}
+		
+		return combination(nodes, size);
+		
+		//return checkCurrClique(nodes, size);
+	}
+	
+	private boolean checkCurrClique(int[] nodes, int size)
+	{
+		boolean failed = false;
+		for(int i = 0; i < nodes.length-1; i++) // the last node NEVER needs to be checked
+		{
+			for (int j = i+1; j < nodes.length-1; j++)
+				if(matrix[nodes[i]][nodes[j]] == 0)
+					failed = true;
+			if(failed)
+				break;
+		}
+		if(failed)
+			failed=false;
+		else{
+			System.out.println("A clique exists of size " + size);
+			System.out.print("Nodes included: " + (nodes[0]+1));
+			for(int i = 1; i < nodes.length; i++)
+				System.out.print(", " + (nodes[i]+1));
+			System.out.println('\n');
+			return true;
+		}
+		return false;
+	}
+	
+	private void InitMatrix(){
 		// Grab the input file
 		fileName = "graph.txt";
 		
@@ -99,4 +142,28 @@ public class Clique
 			System.exit(1);
 		}
 	}
+	
+	private boolean combination(int[] arr, int r)
+	{
+		int[] res = new int[r];
+		return combine(arr, res, 0, 0, r);
+	}
+	
+	private boolean combine(int[] arr, int[] res, int currIndex, int level, int r) {
+        if(level == r){
+        	if(checkCurrClique(res, r))
+				return true;
+        	return false;
+        }
+        for (int i = currIndex; i < arr.length; i++) {
+            res[level] = arr[i];
+            if(combine(arr, res, i+1, level+1, r))
+    			return true;
+            //way to avoid printing duplicates
+            if(i < arr.length-1 && arr[i] == arr[i+1]){
+                i++;
+            }
+        }
+        return false;
+    }
 }
