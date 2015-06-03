@@ -1,3 +1,4 @@
+package completeCliqueSolver;
 /**
  * Main Class
  * Initializes the program and manages all of the user interaction bits
@@ -13,7 +14,7 @@ public class Main
 		printIntro();
 		
 		// Create a new clique
-		new Clique();
+		new CliqueSolver();
 	}
 	
 	/**

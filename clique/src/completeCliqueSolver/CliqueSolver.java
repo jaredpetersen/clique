@@ -1,26 +1,28 @@
+package completeCliqueSolver;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
 /**
- * Clique Class
+ * CliqueSolver Class
  * Used to find the largest clique in the given graph
  * @author EthanEiter, jshin13wou, jaredpetersen
  */
-public class Clique 
+public class CliqueSolver 
 {
 	private String fileName; // Input file name
 	private Scanner scanner; // File Scanner
-	int matrix[][]; 		 // 2D array used to store the adjacency matrix
-	int degree[]; 			 // degree array
+	public int matrix[][]; 		 // 2D array used to store the adjacency matrix
+	public int degree[]; 			 // degree array
 	
 	/**
-	 * Clique Constructor
+	 * CliqueSolver Constructor
+	 * Normal constructor, automatically grabs the graph from the input file
 	 */
-	public Clique()
+	public CliqueSolver()
 	{
 		// Get the graph in the form of an adjacency matrix
-		InitMatrix();
+		InitMatrix("graph.txt");
 		// Get the degrees for each vertex
 		InitDegree();
 		
@@ -34,21 +36,34 @@ public class Clique
 				if (checkClique(i))
 				{
 					// Found the clique, stop looking
-					break;
+					return;
 				}
 			}
 		}
 	}
 	
 	/**
+	 * CliqueSolver Constructor -- Testing Edition
+	 * Test constructor, test cases graph everything manually
+	 */
+	public CliqueSolver(String graphInputFile)
+	{
+		// Get the graph in the form of an adjacency matrix
+		InitMatrix(graphInputFile);
+		// Get the degrees for each vertex
+		InitDegree();
+		
+	}
+	
+	/**
 	 * Set a 2D array that matches the input file
 	 */
 	@SuppressWarnings("resource")
-	private void InitMatrix()
+	private void InitMatrix(String graphInputFile)
 	{
 		// Grab the input file
 		// File needs to be in the folder just above where the code is located
-		fileName = "graph.txt";
+		fileName = graphInputFile;
 		
 		try
 		{
@@ -76,12 +91,9 @@ public class Clique
 		
 		catch (FileNotFoundException e)
 		{
-			// File does not exist
+			// File does not exist, shut the program down with an error
 			System.out.println("Oops! It looks like we couldn't find your input file.");
 			System.out.println("Please read the documentation for more information.");
-			
-			// Shut the program down with an error
-			System.exit(1);
 		}
 	}
 	
@@ -108,7 +120,7 @@ public class Clique
 	 * @param deg The degree
 	 * @return The number of the vertices with the input degree or higher
 	 */
-	private int numOfDegreeOrHigher(int deg)
+	public int numOfDegreeOrHigher(int deg)
 	{
 		int num = 0;
 		for (int i = 0; i < matrix.length; i++)
@@ -144,7 +156,7 @@ public class Clique
 	 * @param size The number of nodes in the clique
 	 * @return True if there is a complete clique with the input size
 	 */
-	private boolean checkClique(int size) 
+	public boolean checkClique(int size) 
 	{
 		/* Nodes used to store the nodes that fit the degree requirements
 		   i.e. if we're looking for a clique of size 4, don't include nodes that only have 
@@ -167,10 +179,10 @@ public class Clique
 	}
 	
 	/**
-	 * 
-	 * @param nodes
-	 * @param size
-	 * @return
+	 * Check if the given graph has a complete clique of size "size"
+	 * @param nodes The nodes in the graph
+	 * @param size The size of the complete clique we're looking for
+	 * @return True if the graph contains a complete clique of size "size"
 	 */
 	private boolean checkCurrClique(int[] nodes, int size)
 	{
@@ -192,7 +204,7 @@ public class Clique
 		
 		if (failed)
 		{
-			failed=false;
+			failed = false;
 		}
 		else
 		{
@@ -209,35 +221,41 @@ public class Clique
 	}
 	
 	/**
-	 * 
-	 * @param arr
-	 * @param r
-	 * @return
+	 * Checks all of the nodes for a complete clique of the given size
+	 * @param arr The nodes in the subgraph
+	 * @param r The size of the complete clique we are looking for
+	 * @return True if a complete clique of size r is found
 	 */
 	private boolean combination(int[] arr, int r)
 	{
 		int[] res = new int[r];
+		// Call the helper method
 		return combine(arr, res, 0, 0, r);
 	}
 	
 	/**
-	 * 
-	 * @param arr
+	 * Recursive helper method that checks for all of the combinations of the input nodes
+	 * @param arr The array of nodes
 	 * @param res
 	 * @param currIndex
 	 * @param level
 	 * @param r
-	 * @return
+	 * @return True if a complete clique of size r is found
 	 */
 	private boolean combine(int[] arr, int[] res, int currIndex, int level, int r) {
-        if (level == r)
+		// Check if combo found
+		if (level == r)
         {
+			// Check if the combination is a complete clique
         	if(checkCurrClique(res, r))
         	{
-				return true;
+				// Success! Let's get out of here
+        		return true;
         	}
+        	// Fail, keep on chugging
         	return false;
         }
+		// Combo not found, keep chugging
         for (int i = currIndex; i < arr.length; i++) 
         {
             res[level] = arr[i];
@@ -251,6 +269,7 @@ public class Clique
                 i++;
             }
         }
+        // Complete Clique of size r was never found, get out of here
         return false;
     }
 }
