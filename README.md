@@ -16,4 +16,4 @@ A clique of size n is K_n. The clique number of a graph is the largest clique th
 
   ![Example Adjacency Matrix with Key](/documentation/screenshots/examplematrixwithkey.png?raw=true)
 
-  Remember: Do not put in the column and row headings in your ```graph.txt``` file.
+  Remember: Do not put the column and row headings in your ```graph.txt``` file.
