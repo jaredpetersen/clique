@@ -25,7 +25,7 @@ public class Test5
 		 * Clique of Size 4
 		 * 
 		 * Current Status:
-		 * FAIL
+		 * PASS
 		 */
 		
 		CliqueSolver clique = new CliqueSolver("testInputs/graphTest5.txt");
@@ -34,7 +34,7 @@ public class Test5
 		// Iterate over the matrix, start at the highest clique size
 		for (int i = clique.matrix.length; i >= 1; i--)
 		{	
-			if (clique.numOfDegreeOrHigher(i-1) >= i-1)
+			if (clique.numOfDegreeOrHigher(i-1) >= i)
 			{
 				// Check for a complete clique of size i
 				if (clique.checkClique(i))

@@ -21,7 +21,7 @@ public class Test1
 		 * Clique of size 1
 		 * 
 		 * Current Status:
-		 * FAIL
+		 * PASS
 		 */
 		
 		CliqueSolver clique = new CliqueSolver("testInputs/graphTest1.txt");
